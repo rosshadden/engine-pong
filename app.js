@@ -1,0 +1,35 @@
+////////////////////////////////////////////////////////////////
+//	MODULES
+var express = require('express')
+  , routes = require('./routes');
+
+var app = module.exports = express.createServer();
+
+////////////////////////////////////////////////////////////////
+//	CONFIG
+app.configure(function(){
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(express.cookieParser());
+	app.use(express.session({secret: 'Shh... it is a secret!'}));
+	app.use(require('stylus').middleware({src: __dirname + '/ink'}));
+	app.use(app.router);
+	app.use(express.static(__dirname + '/ink'));
+});
+
+app.configure('development', function(){
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+	app.use(express.errorHandler());
+});
+
+////////////////////////////////////////////////////////////////
+//	ROUTES
+app.get('/', routes.index);
+
+app.listen(+(process.argv[2] || process.env.PORT || 3000));
+console.log("%s:%d [%s]", app.address().address, app.address().port, app.settings.env);
