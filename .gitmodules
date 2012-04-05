@@ -1,0 +1,6 @@
+[submodule "engine"]
+	path = engine
+	url = git@github.com:rosshadden/engine-server.git
+[submodule "ink/engine"]
+	path = ink/engine
+	url = git@github.com:rosshadden/engine-client.git
