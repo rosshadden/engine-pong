@@ -20,7 +20,10 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+	app.use(express.errorHandler({
+		dumpExceptions:	true,
+		showStack:		true
+	}));
 });
 
 app.configure('production', function(){
@@ -30,6 +33,23 @@ app.configure('production', function(){
 ////////////////////////////////////////////////////////////////
 //	ROUTES
 app.get('/', routes.index);
+
+app.get('/maps/:path', function(request, response){
+	var map;
+	
+	try{
+		map = require('./engine/maps/' + request.params.path + '.json');
+	}catch(e){
+		console.log('ERROR:', e);
+		map = {
+			error:	"The map you seek does not exist."
+		};
+	}
+	
+	response.contentType('application/json');
+	
+	response.json(map);
+});
 
 app.listen(+(process.argv[2] || process.env.PORT || 3000));
 console.log("%s:%d [%s]", app.address().address, app.address().port, app.settings.env);
