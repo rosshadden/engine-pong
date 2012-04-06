@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////
 //	MODULES
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express'),
+	routes = require('./routes');
 
 var app = module.exports = express.createServer();
 
@@ -14,7 +14,9 @@ app.configure(function(){
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
 	app.use(express.session({secret: 'Shh... it is a secret!'}));
-	app.use(require('stylus').middleware({src: __dirname + '/ink'}));
+	app.use(require('stylus').middleware({
+		src:	__dirname + '/ink'
+	}));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/ink'));
 });
@@ -34,6 +36,24 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
+//	Move this and /maps/* to ./engine.
+app.get('/GET', function(request, response){
+	var data = '',
+		url = parseURL(request.url, true);
+	
+	response.contentType('application/json');
+	
+	switch(url.query.for){
+		case 'debug':
+			data = 'debug';
+			break;
+		default:
+			data = 'default';
+	}
+	
+	response.json(data);
+});
+
 app.get('/maps/:path', function(request, response){
 	var map;
 	
@@ -41,6 +61,7 @@ app.get('/maps/:path', function(request, response){
 		map = require('./engine/maps/' + request.params.path + '.json');
 	}catch(e){
 		console.log('ERROR:', e);
+		
 		map = {
 			error:	"The map you seek does not exist."
 		};

@@ -15,5 +15,12 @@ require(['jquery', 'engine/engine'], function($, Engine){
 		paint:	function(){}
 	});
 	
+////////////////////////////////
+//	DEBUGGING
+	game.bind.key('shift + graveaccent', function(){
+		console.log(game.input.keyboard.activeKeys());
+	});
+////////////////////////////////
+	
 	game.start();
 });
