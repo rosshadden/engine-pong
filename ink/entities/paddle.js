@@ -5,9 +5,9 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 			
 			this.isAnimated = false;
 			
-			this.position = {
-				x:	properties.position && properties.position.x || 0,
-				y:	properties.position && properties.position.y || 0
+			this.position = properties.position || {
+				x:	0,
+				y:	0
 			};
 			
 			this.velocity = properties.velocity || {
@@ -26,7 +26,11 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 		},
 		
 		move:	function(dir){
-			this.position.y += this.velocity.y * dir;
+			var self = this;
+			
+			self.position.y += self.velocity.y * dir;
+			
+			$(self).trigger('move-player.player', self.position);
 		},
 		
 		draw:	function(){

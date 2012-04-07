@@ -3,9 +3,9 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 		init:	function(properties){
 			this._super(properties);
 			
-			this.position = {
-				x:	properties.position && properties.position.x || 0,
-				y:	properties.position && properties.position.y || 0
+			this.position = properties.position || {
+				x:	0,
+				y:	0
 			};
 			
 			this.score = 0;
@@ -14,7 +14,7 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 		},
 		
 		add:	function(x){
-			this.score += (x || 1);
+			this.score += x || 1;
 		},
 		
 		draw:	function(){

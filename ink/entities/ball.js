@@ -5,28 +5,33 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 			
 			var self = this;
 			
-			this.isAnimated = true;
-			this.isAnimating = true;
+			self.isAnimated = true;
+			self.isAnimating = true;
 			
-			this.dim = {
+			self.dim = {
 				width:	50,
 				height:	50
 			};
 			
-			this.position = {
-				x:	properties.position && properties.position.x || 0,
-				y:	properties.position && properties.position.y || 0
+			self.position = properties.position || {
+				x:	0,
+				y:	0
 			};
 			
-			this.velocity = properties.velocity || {
+			self.velocity = properties.velocity || {
 				x:  4,
 				y:  4
 			};
 			
-			this.sprite.src = 'images/tiles/circle.png';
-			this.spriteIndex = 0;
+			self.direction = {
+				x:	1,
+				y:	0
+			};
 			
-			this.animation = [{
+			self.sprite.src = 'images/tiles/circle.png';
+			self.spriteIndex = 0;
+			
+			self.animation = [{
 				x:			0,
 				y:			0,
 				w:			100,
@@ -48,10 +53,10 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 				h:			100
 			}];
 			
-			this.currentFrame = 0;
-			this.interval = 0;
+			self.currentFrame = 0;
+			self.interval = 0;
 			
-			this.interval = (function(interval){
+			self.interval = (function(interval){
 				var output;
 				if(typeof interval === 'number'){
 					output = function(frame){
@@ -67,7 +72,7 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 				return output;
 			})(properties.interval || 4);
 			
-			this.sequence = (function(sequence){
+			self.sequence = (function(sequence){
 				var output = [];
 				if(typeof sequence === 'object' && sequence instanceof Array){
 					output = sequence;
@@ -83,15 +88,32 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 			})(properties.sequence || 'linear');
 		},
 		
-		ai:		function(a){
-			a = a || 2;
+		ai:		function(positions){
+			var self = this;
 			
-			var direction = [
-				Math.floor(Math.random() * 3) - 1,
-				Math.floor(Math.random() * 3) - 1
-			];
+			if(
+				self.position.x <= positions[0].x + 25
+			||	self.position.x >= positions[1].x - 50
+			){
+				self.direction.x = -1 * self.direction.x;
+			}
 			
-			this.move(direction[0] * Math.floor(Math.random() * a), direction[1] * Math.floor(Math.random() * a));
+			self.move(
+				self.direction.x,
+				self.direction.y
+			);
+			
+//			a = a || 2;
+//			
+//			var direction = [
+//				Math.floor(Math.random() * 3) - 1,
+//				Math.floor(Math.random() * 3) - 1
+//			];
+//			
+//			this.move(
+//				direction[0] * Math.floor(Math.random() * a),
+//				direction[1] * Math.floor(Math.random() * a)
+//			);
 		},
 		
 		move:	function(x, y){

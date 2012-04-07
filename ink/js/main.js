@@ -46,27 +46,31 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 		},
 		
 		update:	function(){
-			var keys = this.input.keyboard.activeKeys();
+			var self = this,
+				keys = this.input.keyboard.activeKeys();
 			
 			if(keys.length > 0){
 				if(keys.indexOf('w') > -1 || keys.indexOf('comma') > -1){
-					this.world.entities.playerOne.move(-1);
+					self.world.entities.playerOne.move(-1);
 				}
 				
 				if(keys.indexOf('s') > -1 || keys.indexOf('o') > -1){
-					this.world.entities.playerOne.move(1);
+					self.world.entities.playerOne.move(1);
 				}
 				
 				if(keys.indexOf('up') > -1){
-					this.world.entities.playerTwo.move(-1);
+					self.world.entities.playerTwo.move(-1);
 				}
 				
 				if(keys.indexOf('down') > -1){
-					this.world.entities.playerTwo.move(1);
+					self.world.entities.playerTwo.move(1);
 				}
 			}
 			
-			this.world.entities.ball.ai();
+			self.world.entities.ball.ai([
+				self.world.entities.playerOne.position,
+				self.world.entities.playerTwo.position
+			]);
 		},
 		
 		paint:	function(){}
