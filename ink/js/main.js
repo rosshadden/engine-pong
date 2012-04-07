@@ -2,7 +2,7 @@ require.config({
 	baseUrl:	'../'
 });
 
-require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], function($, Engine, Paddle, Ball){
+require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entities/score'], function($, Engine, Paddle, Ball, Score){
 	var	game = new Engine({
 		screen:	$('#screen')[0],
 		
@@ -12,7 +12,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 			var self = this;
 
 			self.world.createEntity(Paddle, {
-				name:       'paddleOne',
+				name:       'playerOne',
 				position:   self.world.toXY(1, 6),
 				velocity: {
 					x:  0,
@@ -21,7 +21,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 			});
 			
 			self.world.createEntity(Paddle, {
-				name:       'paddleTwo',
+				name:       'playerTwo',
 				position:   self.world.toXY(22, 6)
 			});
 			
@@ -30,6 +30,18 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 				position:	self.world.toXY(10, 6),
 				interval:	4
 			});
+			
+			self.world.createEntity(Score, {
+				name:	'playerOneScore',
+			});
+			
+			self.world.createEntity(Score, {
+				name:	'playerTwoScore',
+				position: {
+					x:	400,
+					y:	0
+				}
+			});
 		},
 		
 		update:	function(){
@@ -37,19 +49,19 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 			
 			if(keys.length > 0){
 				if(keys.indexOf('w') > -1 || keys.indexOf('comma') > -1){
-					this.world.entities.paddleOne.move(-1);
+					this.world.entities.playerOne.move(-1);
 				}
 				
 				if(keys.indexOf('s') > -1 || keys.indexOf('o') > -1){
-					this.world.entities.paddleOne.move(1);
+					this.world.entities.playerOne.move(1);
 				}
 				
 				if(keys.indexOf('up') > -1){
-					this.world.entities.paddleTwo.move(-1);
+					this.world.entities.playerTwo.move(-1);
 				}
 				
 				if(keys.indexOf('down') > -1){
-					this.world.entities.paddleTwo.move(1);
+					this.world.entities.playerTwo.move(1);
 				}
 			}
 			
@@ -57,6 +69,16 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 		},
 		
 		paint:	function(){}
+	});
+	
+////////////////////////////////
+//	DEBUGGING
+	game.bind.key('1',function(){
+		game.world.entities.playerOneScore.add();
+	});
+	
+	game.bind.key('2',function(){
+		game.world.entities.playerTwoScore.add();
 	});
 	
 	game.bind.key('z',function(){
@@ -77,8 +99,6 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball'], functio
 		game.utilities.log.clear();
 	});
 	
-////////////////////////////////
-//	DEBUGGING
 	game.bind.key('shift + graveaccent', function(){
 		console.log(game.input.keyboard.activeKeys());
 	});
