@@ -15,6 +15,14 @@ require(['jquery', 'engine/engine'], function($, Engine){
 		paint:	function(){}
 	});
 	
+	game.bind.key('l', function(){
+		game.utilities.log.add('Testing the new logger.');
+	});
+	
+	game.bind.key('shift + l', function(){
+		game.utilities.log.clear();
+	});
+	
 ////////////////////////////////
 //	DEBUGGING
 	game.bind.key('shift + graveaccent', function(){
