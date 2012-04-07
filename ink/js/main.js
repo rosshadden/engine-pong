@@ -37,8 +37,9 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 			
 			self.world.createEntity(Score, {
 				name:	'playerTwoScore',
+				align:	'right',
 				position: {
-					x:	400,
+					x:	600,
 					y:	0
 				}
 			});
