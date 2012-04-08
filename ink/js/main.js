@@ -67,10 +67,10 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 				}
 			}
 			
-			self.world.entities.ball.ai([
-				self.world.entities.playerOne.position,
-				self.world.entities.playerTwo.position
-			]);
+			self.world.entities.ball.update(
+				self.world.entities.playerOne,
+				self.world.entities.playerTwo
+			);
 		},
 		
 		paint:	function(){}

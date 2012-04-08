@@ -1,4 +1,4 @@
-define(['./entity', 'engine/draw'], function(Entity, draw){
+define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, collision){
 	var Ball = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -88,13 +88,10 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 			})(properties.sequence || 'linear');
 		},
 		
-		ai:		function(positions){
+		update:		function(playerOne, playerTwo){
 			var self = this;
 			
-			if(
-				self.position.x <= positions[0].x + 25
-			||	self.position.x >= positions[1].x - 50
-			){
+			if(collision(self, playerOne) || collision(self, playerTwo)){
 				self.direction.x = -1 * self.direction.x;
 			}
 			
@@ -102,18 +99,6 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 				self.direction.x,
 				self.direction.y
 			);
-			
-//			a = a || 2;
-//			
-//			var direction = [
-//				Math.floor(Math.random() * 3) - 1,
-//				Math.floor(Math.random() * 3) - 1
-//			];
-//			
-//			this.move(
-//				direction[0] * Math.floor(Math.random() * a),
-//				direction[1] * Math.floor(Math.random() * a)
-//			);
 		},
 		
 		move:	function(x, y){
