@@ -43,10 +43,6 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 					y:	0
 				}
 			});
-			
-			for(var entity in self.world.entities){
-				console.log(self.world.entities[entity].name, self.world.entities[entity].position);
-			}
 		},
 		
 		update:	function(){
@@ -82,24 +78,48 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	
 ////////////////////////////////
 //	DEBUGGING
-	game.bind.key('1',function(){
+	//	Events
+	game.bind.key('e',function(){
+		game.events.listen('test', function(event, asdf){
+			console.log('event:', 'test', event, asdf);
+		});
+	});
+	
+	game.bind.key('shift + e', function(){
+		game.events.emit('test', 'qwer');
+	});
+	
+	game.bind.key('f',function(){
+		game.events.listen('test.namespace', function(event, asdf){
+			console.log('event:', 'namespace', event, asdf);
+		});
+	});
+	
+	game.bind.key('shift + f', function(){
+		game.events.emit('test.namespace', 'qwer');
+	});
+	
+	//	Scores
+	game.bind.key('1', function(){
 		game.world.entities.playerOneScore.add();
 	});
 	
-	game.bind.key('2',function(){
+	game.bind.key('2', function(){
 		game.world.entities.playerTwoScore.add();
 	});
 	
-	game.bind.key('z',function(){
+	//	Animation
+	game.bind.key('z', function(){
 		game.world.entities.ball.stop();
 		console.log('LOG:','ball animation stopped.');
 	});
 	
-	game.bind.key('x',function(){
+	game.bind.key('x', function(){
 		game.world.entities.ball.play();
 		console.log('LOG:','ball animation started.');
 	});
 	
+	//	Logging
 	game.bind.key('l', function(){
 		game.utilities.log.add('Testing the new logger.');
 	});
@@ -108,6 +128,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 		game.utilities.log.clear();
 	});
 	
+	//	Keys
 	game.bind.key('shift + graveaccent', function(){
 		console.log(game.input.keyboard.activeKeys());
 	});
