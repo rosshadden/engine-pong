@@ -29,7 +29,7 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 			
 			self.direction = {
 				x:	1,
-				y:	0
+				y:	1
 			};
 			
 			self.sprite.src = 'images/tiles/circle.png';
@@ -109,6 +109,11 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 				self.direction.x = -1 * self.direction.x;
 				
 				events.emit('score.playerOne');
+			}
+			
+			//	TODO:	Allow collisions on 'top, bottom', etc.
+			if(collision.wall(self, 'top') || collision.wall(self, 'bottom')){
+				self.direction.y = -1 * self.direction.y;
 			}
 			
 			self.move(
