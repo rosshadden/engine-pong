@@ -29,7 +29,7 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 			
 			self.direction = {
 				x:	1,
-				y:	1
+				y:	0.5
 			};
 			
 			self.sprite.src = 'images/tiles/circle.png';
