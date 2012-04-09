@@ -13,7 +13,7 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 				height:	50
 			};
 			
-			self.position = properties.position || {
+			self.position = self.initialPosition = properties.position || {
 				x:	0,
 				y:	0
 			};
@@ -88,11 +88,15 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 			})(properties.sequence || 'linear');
 		},
 		
-		update:		function(playerOne, playerTwo){
+		update:	function(playerOne, playerTwo){
 			var self = this;
 			
-			if(collision(self, playerOne) || collision(self, playerTwo)){
+			if(collision.rectangle(self, playerOne) || collision.rectangle(self, playerTwo)){
 				self.direction.x = -1 * self.direction.x;
+			}
+			
+			if(collision.wall(self, 'any')){
+				self.moveTo(self.initialPosition.x, self.initialPosition.y);
 			}
 			
 			self.move(
@@ -104,6 +108,11 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 		move:	function(x, y){
 			this.position.x += this.velocity.x * x;
 			this.position.y += this.velocity.y * y;
+		},
+		
+		moveTo:	function(x, y){
+			this.position.x = x;
+			this.position.y = y;
 		},
 		
 		draw:	function(){

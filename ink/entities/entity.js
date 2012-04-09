@@ -3,17 +3,19 @@ define(['engine/lib/class', 'engine/world'], function(Base, world){
 		init:	function(properties){
 			var self = this;
 			
-			this.isAnimated = false;
+			self.name = properties.name;
 			
-			this.dim = {
+			self.isAnimated = false;
+			
+			self.dim = {
 				width:	world.cell.width,
 				height:	world.cell.height
 			};
 			
-			this.sprite = new Image();
-			this.spriteIndex = 0;
+			self.sprite = new Image();
+			self.spriteIndex = 0;
 			
-			this.currentFrame = 0;
+			self.currentFrame = 0;
 		}
 	});
 	

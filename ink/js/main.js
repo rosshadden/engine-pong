@@ -43,6 +43,10 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 					y:	0
 				}
 			});
+			
+			for(var entity in self.world.entities){
+				console.log(self.world.entities[entity].name, self.world.entities[entity].position);
+			}
 		},
 		
 		update:	function(){
