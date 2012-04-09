@@ -1,16 +1,22 @@
-define(['./entity', 'engine/draw'], function(Entity, draw){
+define(['./entity', 'engine/draw', 'engine/events'], function(Entity, draw, events){
 	var Score = Entity.extend({
 		init:	function(properties){
-			this._super(properties);
+			var self = this;
 			
-			this.position = properties.position || {
+			self._super(properties);
+			
+			self.position = properties.position || {
 				x:	0,
 				y:	0
 			};
 			
-			this.score = 0;
+			self.score = 0;
 			
-			this.align = properties.align;
+			self.align = properties.align;
+			
+			events.listen('score.' + self.name.slice(0, -5), function(event){
+				self.add();
+			});
 		},
 		
 		add:	function(x){

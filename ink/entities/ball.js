@@ -1,4 +1,4 @@
-define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, collision){
+define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], function(Entity, draw, collision, events){
 	var Ball = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -99,8 +99,16 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 				self.direction.x = -1 * self.direction.x;
 			}
 			
-			if(collision.wall(self, 'any')){
+			if(collision.wall(self, 'left')){
 				self.direction.x = -1 * self.direction.x;
+				
+				events.emit('score.playerTwo');
+			}
+			
+			if(collision.wall(self, 'right')){
+				self.direction.x = -1 * self.direction.x;
+				
+				events.emit('score.playerOne');
 			}
 			
 			self.move(
