@@ -13,10 +13,14 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 				height:	50
 			};
 			
-			self.position = self.initialPosition = properties.position || {
+			self.position = properties.position || {
 				x:	0,
 				y:	0
 			};
+			
+			self.initialPosition = {};
+			self.initialPosition.x = self.position.x;
+			self.initialPosition.y = self.position.y;
 			
 			self.velocity = properties.velocity || {
 				x:  4,
@@ -96,7 +100,7 @@ define(['./entity', 'engine/draw', 'engine/collision'], function(Entity, draw, c
 			}
 			
 			if(collision.wall(self, 'any')){
-				self.moveTo(self.initialPosition.x, self.initialPosition.y);
+				self.direction.x = -1 * self.direction.x;
 			}
 			
 			self.move(
