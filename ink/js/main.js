@@ -75,30 +75,16 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 		
 		paint:	function(){}
 	});
+			
+	game.events.listen('win', function(event, player){
+		game.end()
+		.done(function(){
+			game.utilities.log.add(player + ' won the game!');
+		});
+	});
 	
 ////////////////////////////////
 //	DEBUGGING
-	//	Events
-	game.bind.key('e',function(){
-		game.events.listen('test', function(event, asdf){
-			console.log('event:', 'test', event, asdf);
-		});
-	});
-	
-	game.bind.key('shift + e', function(){
-		game.events.emit('test', 'qwer');
-	});
-	
-	game.bind.key('f',function(){
-		game.events.listen('test.namespace', function(event, asdf){
-			console.log('event:', 'namespace', event, asdf);
-		});
-	});
-	
-	game.bind.key('shift + f', function(){
-		game.events.emit('test.namespace', 'qwer');
-	});
-	
 	//	Scores
 	game.bind.key('1', function(){
 		game.world.entities.playerOneScore.add();

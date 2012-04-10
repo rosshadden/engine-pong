@@ -21,6 +21,10 @@ define(['./entity', 'engine/draw', 'engine/events'], function(Entity, draw, even
 		
 		add:	function(x){
 			this.score += x || 1;
+			
+			if(this.score === 10){
+				events.emit('win', this.name.slice(0, -5));
+			}
 		},
 		
 		draw:	function(){
