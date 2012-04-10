@@ -111,7 +111,6 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 				events.emit('score.playerOne');
 			}
 			
-			//	TODO:	Allow collisions on 'top, bottom', etc.
 			if(collision.wall(self, 'top') || collision.wall(self, 'bottom')){
 				self.direction.y = -1 * self.direction.y;
 			}
@@ -157,10 +156,6 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 		
 		stop:	function(){
 			this.isAnimating = false;
-		},
-		
-		debug:	function(){
-			console.log(this.animation, this.sequence, this.spriteIndex);
 		}
 	});
 	

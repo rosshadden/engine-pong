@@ -85,15 +85,6 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	
 ////////////////////////////////
 //	DEBUGGING
-	//	Scores
-	game.bind.key('1', function(){
-		game.world.entities.playerOneScore.add();
-	});
-	
-	game.bind.key('2', function(){
-		game.world.entities.playerTwoScore.add();
-	});
-	
 	//	Animation
 	game.bind.key('z', function(){
 		game.world.entities.ball.stop();
