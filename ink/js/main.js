@@ -82,6 +82,8 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 			game.utilities.log.add(player + ' won the game!');
 		});
 	});
+
+	window.audio = game.audio;
 	
 ////////////////////////////////
 //	DEBUGGING
