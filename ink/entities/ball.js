@@ -1,4 +1,4 @@
-define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], function(Entity, draw, collision, events){
+define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/events'], function(Entity, draw, collision, audio, events){
 	var Ball = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -90,6 +90,10 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 				}
 				return output;
 			})(properties.sequence || 'linear');
+			
+			events.listen('collision.ball', function(){
+				audio.play('click');
+			});
 		},
 		
 		update:	function(playerOne, playerTwo){
@@ -97,22 +101,28 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/events'], functio
 			
 			if(collision.rectangle(self, playerOne) || collision.rectangle(self, playerTwo)){
 				self.direction.x = -1 * self.direction.x;
+				
+				events.emit('collision.ball');
 			}
 			
 			if(collision.wall(self, 'left')){
 				self.direction.x = -1 * self.direction.x;
 				
 				events.emit('score.playerTwo');
+				events.emit('collision.ball');
 			}
 			
 			if(collision.wall(self, 'right')){
 				self.direction.x = -1 * self.direction.x;
 				
 				events.emit('score.playerOne');
+				events.emit('collision.ball');
 			}
 			
 			if(collision.wall(self, 'top') || collision.wall(self, 'bottom')){
 				self.direction.y = -1 * self.direction.y;
+				
+				events.emit('collision.ball');
 			}
 			
 			self.move(

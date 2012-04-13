@@ -43,6 +43,8 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 					y:	0
 				}
 			});
+			
+			self.audio.load('click', 'sounds/click.wav');
 		},
 		
 		update:	function(){
