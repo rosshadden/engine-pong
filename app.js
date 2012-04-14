@@ -86,6 +86,4 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 //	SERVE
 io.sockets.on('connection', function(socket){
 	console.log('Socket connected.');
-
-	socket.emit('testing', 'Mom!');
 });
