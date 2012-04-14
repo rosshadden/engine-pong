@@ -117,7 +117,8 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	game.bind.key('shift + graveaccent', function(){
 		console.log(game.input.keyboard.activeKeys());
 	});
+
 ////////////////////////////////
-	
+//	RUN	
 	game.start();
 });

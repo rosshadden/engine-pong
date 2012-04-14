@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////
 //	MODULES
-var express = require('express'),
+var io,
+	express = require('express'),
 	routes = require('./routes');
 
-var app = module.exports = express.createServer();
+var app = module.exports = express.createServer(),
+	io = require('socket.io').listen(app);
 
 ////////////////////////////////////////////////////////////////
 //	CONFIG
@@ -19,6 +21,8 @@ app.configure(function(){
 	}));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/ink'));
+	
+	io.set('log level', 1);
 });
 
 app.configure('development', function(){
@@ -72,5 +76,16 @@ app.get('/maps/:path', function(request, response){
 	response.json(map);
 });
 
+////////////////////////////////////////////////////////////////
+//	RUN
 app.listen(+(process.argv[2] || process.env.PORT || 3000));
+
 console.log("%s:%d [%s]", app.address().address, app.address().port, app.settings.env);
+
+////////////////////////////////////////////////////////////////
+//	SERVE
+io.sockets.on('connection', function(socket){
+	console.log('Socket connected.');
+
+	socket.emit('testing', 'Mom!');
+});
