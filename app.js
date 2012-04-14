@@ -62,7 +62,7 @@ app.get('/maps/:path', function(request, response){
 	var map;
 	
 	try{
-		map = require('./engine/maps/' + request.params.path + '.json');
+		map = require('./resources/maps/' + request.params.path + '.json');
 	}catch(e){
 		console.log('ERROR:', e);
 		
