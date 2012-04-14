@@ -92,7 +92,7 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/r
 			})(properties.sequence || 'linear');
 
 			events.listen('collision.ball', function(){
-				resources.get('click', 'sound').play();
+				resources.get('sound/click').play();
 			});
 		},
 		

@@ -81,7 +81,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	});
 			
 	game.events.listen('win', function(event, player){
-		game.resources.get('clap', 'sound').play();
+		game.resources.get('sound/clap').play();
 		
 		game.end()
 		.done(function(){
