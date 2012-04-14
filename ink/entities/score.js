@@ -14,7 +14,7 @@ define(['./entity', 'engine/draw', 'engine/events'], function(Entity, draw, even
 			
 			self.align = properties.align;
 
-			events.listen('score.' + self.name.slice(0, -5), function(event){
+			events.on('score.' + self.name.slice(0, -5), function(event){
 				self.add();
 			});
 		},
