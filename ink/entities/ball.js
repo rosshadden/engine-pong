@@ -1,4 +1,4 @@
-define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/events'], function(Entity, draw, collision, audio, events){
+define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/resources', 'engine/events'], function(Entity, draw, collision, audio, resources, events){
 	var Ball = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -90,9 +90,12 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/e
 				}
 				return output;
 			})(properties.sequence || 'linear');
+
+			var asdf;
 			
 			events.listen('collision.ball', function(){
-				audio.play('click');
+				asdf = asdf || resources.get('click', 'sound');
+				asdf.play();
 			});
 		},
 		

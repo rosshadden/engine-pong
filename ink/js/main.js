@@ -44,7 +44,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 				}
 			});
 			
-			self.audio.load('click', 'sounds/click.wav');
+			self.resources.add('click', 'sounds/click.wav');
 		},
 		
 		update:	function(){
@@ -85,7 +85,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 		});
 	});
 
-	window.audio = game.audio;
+	window.game = game;
 	
 ////////////////////////////////
 //	DEBUGGING
