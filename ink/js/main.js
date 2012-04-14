@@ -43,8 +43,10 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 					y:	0
 				}
 			});
-			
+
+			//TODO:	Come up with a more streamlined way to add resources on init.
 			self.resources.add('click', 'sounds/click.wav');
+			self.resources.add('clap', 'sounds/applause.wav');
 		},
 		
 		update:	function(){
@@ -79,6 +81,8 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	});
 			
 	game.events.listen('win', function(event, player){
+		game.resources.get('clap', 'sound').play();
+		
 		game.end()
 		.done(function(){
 			game.utilities.log.add(player + ' won the game!');

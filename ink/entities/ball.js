@@ -91,11 +91,8 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/r
 				return output;
 			})(properties.sequence || 'linear');
 
-			var asdf;
-			
 			events.listen('collision.ball', function(){
-				asdf = asdf || resources.get('click', 'sound');
-				asdf.play();
+				resources.get('click', 'sound').play();
 			});
 		},
 		
