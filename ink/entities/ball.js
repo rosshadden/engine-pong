@@ -91,7 +91,11 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/r
 				return output;
 			})(properties.sequence || 'linear');
 
-			events.on('collision.ball', function(){
+			events.on('collision.paddle', function(){
+				resources.get('sound/hit').play();
+			});
+
+			events.on('collision.wall', function(){
 				resources.get('sound/click').play();
 			});
 		},
@@ -102,27 +106,27 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/r
 			if(collision.rectangle(self, playerOne) || collision.rectangle(self, playerTwo)){
 				self.direction.x = -1 * self.direction.x;
 				
-				events.emit('collision.ball');
+				events.emit('collision.paddle');
 			}
 			
 			if(collision.wall(self, 'left')){
 				self.direction.x = -1 * self.direction.x;
 				
 				events.emit('score.playerTwo');
-				events.emit('collision.ball');
+				events.emit('collision.wall');
 			}
 			
 			if(collision.wall(self, 'right')){
 				self.direction.x = -1 * self.direction.x;
 				
 				events.emit('score.playerOne');
-				events.emit('collision.ball');
+				events.emit('collision.wall');
 			}
 			
 			if(collision.wall(self, 'top') || collision.wall(self, 'bottom')){
 				self.direction.y = -1 * self.direction.y;
 				
-				events.emit('collision.ball');
+				events.emit('collision.wall');
 			}
 			
 			self.move(

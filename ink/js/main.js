@@ -45,6 +45,12 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 			});
 
 			//TODO:	Come up with a more streamlined way to add resources on init.
+			self.resources.add('intro', 'sounds/intro.wav')
+			.done(function(sound){
+				sound.play();
+			});
+			
+			self.resources.add('hit', 'sounds/boing.wav');
 			self.resources.add('click', 'sounds/click.wav');
 			self.resources.add('clap', 'sounds/applause.wav');
 		},
