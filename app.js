@@ -4,7 +4,7 @@ var io,
 	express = require('express'),
 	routes = require('./routes'),
 	//TODO:	require entire engine directory, or just ./engine/engine.js.
-	router = require('./engine/router');
+	engine = require('./engine/engine.js');
 
 var app = module.exports = express.createServer(),
 	io = require('socket.io').listen(app);
@@ -42,8 +42,8 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
-for(var route in router){
-	app.get(route, router[route]);
+for(var route in engine.router){
+	app.get(route, engine.router[route]);
 }
 
 ////////////////////////////////////////////////////////////////
