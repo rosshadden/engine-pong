@@ -2,7 +2,9 @@
 //	MODULES
 var io,
 	express = require('express'),
-	routes = require('./routes');
+	routes = require('./routes'),
+	//TODO:	require entire engine directory, or just ./engine/engine.js.
+	router = require('./engine/router');
 
 var app = module.exports = express.createServer(),
 	io = require('socket.io').listen(app);
@@ -40,41 +42,9 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
-//	Move this and /maps/* to ./engine.
-app.get('/GET', function(request, response){
-	var data = '',
-		url = parseURL(request.url, true);
-	
-	response.contentType('application/json');
-	
-	switch(url.query.for){
-		case 'debug':
-			data = 'debug';
-			break;
-		default:
-			data = 'default';
-	}
-	
-	response.json(data);
-});
-
-app.get('/maps/:path', function(request, response){
-	var map;
-	
-	try{
-		map = require('./resources/maps/' + request.params.path + '.json');
-	}catch(e){
-		console.log('ERROR:', e);
-		
-		map = {
-			error:	"The map you seek does not exist."
-		};
-	}
-	
-	response.contentType('application/json');
-	
-	response.json(map);
-});
+for(var route in router){
+	app.get(route, router[route]);
+}
 
 ////////////////////////////////////////////////////////////////
 //	RUN
