@@ -3,11 +3,10 @@
 var io,
 	express = require('express'),
 	routes = require('./routes'),
-	//TODO:	require entire engine directory, or just ./engine/engine.js.
-	engine = require('./engine/engine.js');
-
-var app = module.exports = express.createServer(),
-	io = require('socket.io').listen(app);
+	
+	app = module.exports = express.createServer(),
+	io = require('socket.io').listen(app),
+	engine = require('./engine/engine.js')(app);
 
 ////////////////////////////////////////////////////////////////
 //	CONFIG
@@ -42,10 +41,6 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
-for(var route in engine.router){
-	app.get(route, engine.router[route]);
-}
-
 ////////////////////////////////////////////////////////////////
 //	RUN
 app.listen(+(process.argv[2] || process.env.PORT || 3000));
@@ -55,5 +50,5 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 ////////////////////////////////////////////////////////////////
 //	SERVE
 io.sockets.on('connection', function(socket){
-	console.log('Socket connected.');
+	engine.network(socket);
 });
