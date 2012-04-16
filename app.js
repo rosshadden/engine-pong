@@ -1,11 +1,9 @@
 ////////////////////////////////////////////////////////////////
 //	MODULES
-var io,
-	express = require('express'),
+var	express = require('express'),
 	routes = require('./routes'),
 	
 	app = module.exports = express.createServer(),
-	io = require('socket.io').listen(app),
 	engine = require('./engine/engine.js')(app);
 
 ////////////////////////////////////////////////////////////////
@@ -23,7 +21,7 @@ app.configure(function(){
 	app.use(app.router);
 	app.use(express.static(__dirname + '/ink'));
 	
-	io.set('log level', 1);
+	engine.network.io.set('log level', 1);
 });
 
 app.configure('development', function(){
@@ -49,6 +47,4 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 
 ////////////////////////////////////////////////////////////////
 //	SERVE
-io.sockets.on('connection', function(socket){
-	engine.network(socket);
-});
+
