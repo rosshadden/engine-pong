@@ -1,6 +1,6 @@
 exports.index = function(request, response){
 	response.render('index', {
-		title:	'Engine'
+		title:	'Main Menu'
 	});
 };
 
@@ -9,9 +9,13 @@ exports.room = function(request, response){
 		console.log('room', request.params.room);
 	}
 	
-	console.log('room');
-	
-	response.render('index', {
-		title:	'ROOM'
+	response.render('room', {
+		title:	'Room'
+	});
+};
+
+exports.game = function(request, response){
+	response.render('game', {
+		title:	'Game'
 	});
 };

@@ -38,7 +38,16 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
-app.get(/\/join|\/host/, routes.room);
+app.get(/\/(join|host)/, function(request, response, next){
+	var action = request.params[0];
+	console.log(action, 'room');
+	
+	next();
+});
+
+app.get(/\/(join|host)/, routes.room);
+
+app.get('game', routes.game);
 
 ////////////////////////////////////////////////////////////////
 //	RUN
