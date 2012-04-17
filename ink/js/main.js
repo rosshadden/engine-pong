@@ -50,6 +50,8 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 				sound.play();
 			});
 			
+			self.network.connect();
+			
 			self.resources.add('hit', 'sounds/boing.wav');
 			self.resources.add('click', 'sounds/click.wav');
 			self.resources.add('clap', 'sounds/applause.wav');
@@ -66,14 +68,6 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 				
 				if(keys.indexOf('s') > -1 || keys.indexOf('o') > -1){
 					self.world.entities.playerOne.move(1);
-				}
-				
-				if(keys.indexOf('up') > -1){
-					self.world.entities.playerTwo.move(-1);
-				}
-				
-				if(keys.indexOf('down') > -1){
-					self.world.entities.playerTwo.move(1);
 				}
 			}
 			
@@ -122,6 +116,12 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	//	Keys
 	game.bind.key('shift + graveaccent', function(){
 		console.log(game.input.keyboard.activeKeys());
+	});
+
+////////////////////////////////
+//	EVENTS	
+	game.network.on('move', function(y){
+		game.world.entities.playerTwo.moveTo(y);
 	});
 
 ////////////////////////////////

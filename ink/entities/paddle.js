@@ -1,4 +1,4 @@
-define(['./entity', 'engine/draw'], function(Entity, draw){
+define(['./entity', 'engine/network', 'engine/draw'], function(Entity, network, draw){
 	var Paddle = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -31,6 +31,12 @@ define(['./entity', 'engine/draw'], function(Entity, draw){
 			self.position.y += self.velocity.y * dir;
 			
 			$(self).trigger('move-player.player', self.position);
+			
+			network.emit('move', self.position.y);
+		},
+		
+		moveTo:	function(y){
+			this.position.y = y;
 		},
 		
 		draw:	function(){
