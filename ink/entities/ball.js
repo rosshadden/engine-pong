@@ -92,11 +92,11 @@ define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/r
 			})(properties.sequence || 'linear');
 
 			events.on('collision.paddle', function(){
-				resources.get('sound/hit').play().setVolume(0.1);
+				resources.get('sound/hit').play();
 			});
 
 			events.on('collision.wall', function(){
-				resources.get('sound/click').play().setVolume(0.2);
+				resources.get('sound/click').play();
 			});
 		},
 		
