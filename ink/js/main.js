@@ -47,7 +47,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 			//TODO:	Come up with a more streamlined way to add resources on init.
 			self.resources.add('intro', 'sounds/intro.wav')
 			.done(function(sound){
-				sound.play();
+				sound.play().setVolume(0.2);
 			});
 			
 			self.resources.add('hit', 'sounds/boing.wav');
@@ -87,7 +87,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 	});
 			
 	game.events.on('win', function(event, player){
-		game.resources.get('sound/clap').play();
+		game.resources.get('sound/clap').play().setVolume(0.2);
 		
 		game.end()
 		.done(function(){
