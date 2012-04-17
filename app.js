@@ -46,4 +46,6 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 
 ////////////////////////////////////////////////////////////////
 //	SERVE
-
+engine.network.start(function(socket){
+	console.log(socket.id);
+});
