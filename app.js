@@ -21,8 +21,6 @@ app.configure(function(){
 	app.use(app.router);
 	app.use('/engine', express.static(__dirname + '/engine/client'));
 	app.use(express.static(__dirname + '/ink'));
-	
-	engine.network.io.set('log level', 1);
 });
 
 app.configure('development', function(){
