@@ -1,4 +1,4 @@
-define(['./entity', 'engine/network', 'engine/draw'], function(Entity, network, draw){
+define(['./entity', 'engine/collision', 'engine/network', 'engine/draw'], function(Entity, collision, network, draw){
 	var Paddle = Entity.extend({
 		init:	function(properties){
 			this._super(properties);
@@ -26,13 +26,22 @@ define(['./entity', 'engine/network', 'engine/draw'], function(Entity, network, 
 		},
 		
 		move:	function(dir){
-			var self = this;
+			var self = this,
+				moveRequest = {
+					dim:	self.dim,
+					position: {
+						x:	self.position.x,
+						y:	self.position.y + self.velocity.y * dir
+					}
+				};
 			
-			self.position.y += self.velocity.y * dir;
+			if(!collision.wall(moveRequest, 'top') && !collision.wall(moveRequest, 'bottom')){
+				self.position.y += self.velocity.y * dir;
 			
-			$(self).trigger('move-player.player', self.position);
+				$(self).trigger('move-player.player', self.position);
 			
-			network.emit('move', self.position.y);
+				network.emit('move', self.position.y);
+			}
 		},
 		
 		moveTo:	function(y){

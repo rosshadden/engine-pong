@@ -13,11 +13,7 @@ require(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entitie
 
 			self.world.createEntity(Paddle, {
 				name:       'playerOne',
-				position:   self.world.toXY(1, 6),
-				velocity: {
-					x:  0,
-					y:  16
-				}
+				position:   self.world.toXY(1, 6)
 			});
 			
 			self.world.createEntity(Paddle, {
