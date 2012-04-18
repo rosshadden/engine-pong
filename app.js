@@ -75,6 +75,10 @@ app.get('/room/:room([0-9]+)', routes.room);
 
 app.get('/game', routes.game);
 
+app.get('/get/rooms', function(request, response){
+	response.json(rooms);
+});
+
 ////////////////////////////////////////////////////////////////
 //	RUN
 app.listen(+(process.argv[2] || process.env.PORT || 3000));
