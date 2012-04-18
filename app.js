@@ -44,19 +44,31 @@ app.configure('production', function(){
 app.get('/', routes.index);
 
 app.get('/host', function(request, response, next){
-	var r;
+	var room;
 	
-	for(r = 0 ;; r++){
-		if(!rooms[r]){
+	for(room = 0 ;; room++){
+		if(!rooms[room]){
 			break;
 		}
 	}
 	
-	console.log('r', r);
+	rooms[room] = 0;
 	
-	rooms[r] = true;
+	response.redirect('/room/' + room);
+});
+
+app.get('/room/:room([0-9]+)', function(request, response, next){
+	var room = request.params.room;
 	
-	response.redirect('/room/' + r);
+	console.log(room, rooms[room]);
+	
+	if(rooms[room] < 2){
+		rooms[room] += 1;
+		
+		next();
+	}else{
+		response.redirect('/');
+	}
 });
 
 app.get('/room/:room([0-9]+)', routes.room);
