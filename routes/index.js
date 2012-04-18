@@ -5,12 +5,9 @@ exports.index = function(request, response){
 };
 
 exports.room = function(request, response){
-	if(/^\d$/.test(request.params.room)){
-		console.log('room', request.params.room);
-	}
-	
 	response.render('room', {
-		title:	'Room'
+		title:	'Room',
+		room:	request.params.room
 	});
 };
 

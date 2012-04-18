@@ -7,6 +7,11 @@ var	express = require('express'),
 	engine = require('./engine/engine.js')(app);
 
 ////////////////////////////////////////////////////////////////
+//	GAME STUFF
+	var players = {},
+		rooms = {};
+
+////////////////////////////////////////////////////////////////
 //	CONFIG
 app.configure(function(){
 	app.set('views', __dirname + '/views');
@@ -38,16 +43,25 @@ app.configure('production', function(){
 //	ROUTES
 app.get('/', routes.index);
 
-app.get(/\/(join|host)/, function(request, response, next){
-	var action = request.params[0];
-	console.log(action, 'room');
+app.get('/host', function(request, response, next){
+	var r;
 	
-	next();
+	for(r = 0 ;; r++){
+		if(!rooms[r]){
+			break;
+		}
+	}
+	
+	console.log('r', r);
+	
+	rooms[r] = true;
+	
+	response.redirect('/room/' + r);
 });
 
-app.get(/\/(join|host)/, routes.room);
+app.get('/room/:room([0-9]+)', routes.room);
 
-app.get('game', routes.game);
+app.get('/game', routes.game);
 
 ////////////////////////////////////////////////////////////////
 //	RUN
