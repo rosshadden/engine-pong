@@ -8,16 +8,12 @@ require.config({
 require(['jquery'], function($){
 	var route = (location.pathname.match(/\/\w*/) || ['/'])[0];
 	
-	console.log('route', route);
-	
 	switch(route){
 		case '/':
 			break;
 			
 		case '/room':
-			require(['room'], function(room){
-				console.log(room);
-			});
+			require(['room']);
 			break;
 			
 		case '/game':
@@ -28,8 +24,5 @@ require(['jquery'], function($){
 				game.start();
 			});
 			break;
-			
-		default:
-			console.log('route', 'default');
 	}
 });

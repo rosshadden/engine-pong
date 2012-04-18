@@ -1,4 +1,4 @@
-define(['jquery', 'engine/engine', 'entities/paddle', 'entities/ball', 'entities/score'], function($, Engine, Paddle, Ball, Score){
+define(['engine/engine', 'entities/paddle', 'entities/ball', 'entities/score'], function(Engine, Paddle, Ball, Score){
 	var	engine = new Engine({
 		screen:	$('#screen')[0],
 		
