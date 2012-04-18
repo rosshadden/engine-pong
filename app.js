@@ -88,6 +88,14 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 ////////////////////////////////////////////////////////////////
 //	SERVE
 engine.network.start(function(socket){
+	var id = socket.id;
+	
+	app.get('/test', function(request, response){
+		console.log('testing', id);
+		
+		response.redirect('/game');
+	});
+	
 	socket.on('move', function(y){
 		socket.broadcast.emit('move', y);
 	});
