@@ -9,7 +9,7 @@ var	express = require('express'),
 ////////////////////////////////////////////////////////////////
 //	GAME STUFF
 	var players = {},
-		rooms = {};
+		rooms = [];
 
 ////////////////////////////////////////////////////////////////
 //	CONFIG
@@ -47,12 +47,17 @@ app.get('/host', function(request, response, next){
 	var room;
 	
 	for(room = 0 ;; room++){
-		if(!rooms[room]){
+		if(!rooms[room] || rooms[room].players === 0){
 			break;
 		}
 	}
 	
-	rooms[room] = 0;
+	if(!rooms[room]){
+		rooms[room] = {
+			id:			room,
+			players:	0
+		};
+	}
 	
 	response.redirect('/room/' + room);
 });
@@ -62,8 +67,8 @@ app.get('/room/:room([0-9]+)', function(request, response, next){
 	
 	console.log(room, rooms[room]);
 	
-	if(rooms[room] < 2){
-		rooms[room] += 1;
+	if(rooms[room].players < 2){
+		rooms[room].players += 1;
 		
 		next();
 	}else{

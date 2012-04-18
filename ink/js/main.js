@@ -10,6 +10,7 @@ require(['jquery'], function($){
 	
 	switch(route){
 		case '/':
+			require(['menu']);
 			break;
 			
 		case '/room':

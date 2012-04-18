@@ -1,5 +1,7 @@
 <ul id="rooms">
-	<li>
-		<a href="room/1">room #1</a>
-	</li>
+	{{#each this}}
+		<li>
+			<a href="room/1">room #{{id}} ({{players}}/2)</a>
+		</li>
+	{{/each}}
 </ul>
