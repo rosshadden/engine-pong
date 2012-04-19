@@ -1,4 +1,6 @@
 define(function(){
+	var socket = io.connect();
+	
 	$.when(
 		$.get('/get/rooms'),
 		$.get('/templates/rooms.html')
@@ -6,10 +8,12 @@ define(function(){
 		var rooms = data[0],
 			roomList = Handlebars.compile(html[0]);
 		
-		console.log(rooms, roomList(rooms));
-		
 		$('#rooms').html(
 			roomList(rooms)
 		);
+	});
+
+	socket.on('update', function(connection){
+		console.log(connection);
 	});
 });

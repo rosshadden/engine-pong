@@ -65,8 +65,6 @@ app.get('/host', function(request, response, next){
 app.get('/room/:room([0-9]+)', function(request, response, next){
 	var room = request.params.room;
 	
-	console.log(room, rooms[room]);
-	
 	if(rooms[room].players < 2){
 		rooms[room].players += 1;
 		
@@ -74,6 +72,8 @@ app.get('/room/:room([0-9]+)', function(request, response, next){
 	}else{
 		response.redirect('/');
 	}
+	
+	console.log(room, rooms[room]);
 });
 
 app.get('/room/:room([0-9]+)', routes.room);
@@ -94,10 +94,12 @@ console.log("%s:%d [%s]", app.address().address, app.address().port, app.setting
 //	SERVE
 engine.network.start(function(socket){
 	var id = socket.id;
+
+	players[id] = {
+		socket:	socket
+	};
 	
 	app.get('/test', function(request, response){
-		console.log('testing', id);
-		
 		response.redirect('/game');
 	});
 	
