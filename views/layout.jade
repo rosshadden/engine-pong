@@ -10,7 +10,7 @@ html(lang = 'en')
     script(src='/socket.io/socket.io.js')
   body
     #main
-      !=body
+      block content
     ol#log(reversed)
     
     script(src = '/js/lib/plugins.js')
