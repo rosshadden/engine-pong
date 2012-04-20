@@ -46,18 +46,17 @@ app.configure('development', function(){
 ////////////////////////////////////////////////////////////////
 //	ROUTES
 app.get('/', function(request, response, next){
-	//console.log('session', request.user);
-	
 	next();
 }, routes.index);
-
-app.get('/engine/*', function(request, response, next){
-	next();
+	
+//	AJAX
+app.get('/get/rooms', function(request, response){
+	response.json(rooms);
 });
 
 app.get('/maps/:path', function(request, response){
 	try{
-		var map = require('../../resources/maps/' + request.params.path + '.json');
+		var map = require('./resources/maps/' + request.params.path + '.json');
 		
 		response.json(map);
 	}catch(e){
@@ -74,7 +73,7 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
 //	SERVE
-/*app.io.sockets.on('connection', function(socket){
+app.io.sockets.on('connection', function(socket){
 	var id = socket.id;
 	
 	console.log(id in players);
@@ -123,13 +122,7 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 	
 	app.get('/game', routes.game);
 	
-	//	AJAX
-	app.get('/get/rooms', function(request, response){
-		response.json(rooms);
-	});
-	
 	socket.on('move', function(y){
 		socket.broadcast.emit('move', y);
 	});
 });
-*/
