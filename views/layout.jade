@@ -8,6 +8,7 @@ html(lang = 'en')
     meta(name = 'google-site-verification', content = '2zvM0MQYwi9b4V2sMpBHkQHPt20qZAsARcxAv57fZTw')
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/socket.io/socket.io.js')
+    block head
   body
     #main
       block content
@@ -15,3 +16,4 @@ html(lang = 'en')
     
     script(src = '/js/lib/plugins.js')
     script(src = '/engine/lib/require.js', 'data-main' = '/js/main')
+    block foot
