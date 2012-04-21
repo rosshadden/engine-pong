@@ -50,7 +50,8 @@ engine.network.on('socketInfo', function(socket){
 });
 
 app.get('/', function(request, response, next){
-	engine.network.emit('testing');
+	console.log('session', request.session);
+	engine.network.emitAll('testing');
 	
 	next();
 }, routes.index);
