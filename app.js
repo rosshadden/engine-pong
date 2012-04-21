@@ -45,7 +45,13 @@ app.configure('development', function(){
 
 ////////////////////////////////////////////////////////////////
 //	ROUTES
+engine.network.on('socketInfo', function(socket){
+	console.info('event', 'socketInfo', socket);
+});
+
 app.get('/', function(request, response, next){
+	engine.network.emit('testing');
+	
 	next();
 }, routes.index);
 	
@@ -73,7 +79,7 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
 //	SERVE
-app.io.sockets.on('connection', function(socket){
+/*app.io.sockets.on('connection', function(socket){
 	var id = socket.id;
 	
 	console.log(id in players);
@@ -125,4 +131,4 @@ app.io.sockets.on('connection', function(socket){
 	socket.on('move', function(y){
 		socket.broadcast.emit('move', y);
 	});
-});
+});*/

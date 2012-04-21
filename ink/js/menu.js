@@ -1,5 +1,9 @@
 define(function(){
-	var socket = io.connect();
+	var socket = window.io = io.connect();
+	
+	io.on('testing', function(data){
+		console.log('testing', data);
+	});
 	
 	$.when(
 		$.get('/get/rooms'),
@@ -11,9 +15,5 @@ define(function(){
 		$('#rooms').html(
 			roomList(rooms)
 		);
-	});
-
-	socket.on('update', function(connection){
-		console.log(connection);
 	});
 });
