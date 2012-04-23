@@ -5,7 +5,8 @@ var	PORT = +(process.argv[2] || process.env.PORT || 3000),
 	routes = require('./routes'),
 	app = express(),
 	server = require('http').createServer(app);
-	
+
+	app.session = new express.session.MemoryStore;
 	app.io = require('socket.io').listen(server);
 	
 var	engine = require('./engine/engine.js')(app);
@@ -30,7 +31,10 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser("Shhh... it's a secret!"));
-	app.use(express.session());
+	app.use(express.session({
+		key:	'engine',
+		store:	app.session
+	}));
 	app.use(app.router);
 	
 	app.io.set('log level', 1);
@@ -50,7 +54,6 @@ engine.network.on('socketInfo', function(socket){
 });
 
 app.get('/', function(request, response, next){
-	console.log('session', request.session);
 	engine.network.emitAll('testing');
 	
 	next();
