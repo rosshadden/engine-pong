@@ -1,7 +1,7 @@
-define(function(){
-	var socket = window.io = io.connect();
-	
-	io.on('testing', function(data){
+define(['engine/network'], function(network){
+	network
+	.connect()
+	.on('testing', function(data){
 		console.log('testing', data);
 	});
 	
