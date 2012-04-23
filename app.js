@@ -47,22 +47,79 @@ app.configure('development', function(){
 
 ////////////////////////////////////////////////////////////////
 //	ROUTES
+var authenticate = function(request, response, next){
+	if(request.sessionID in engine.players.players){
+		next();
+	}else{
+		//response.send('SUCKS!', 404);
+		next();
+	}
+};
+
 engine.network.on('socketInfo', function(socket){
 	console.info('event', 'socketInfo', socket);
 });
 
 app.get('/', function(request, response, next){
 	engine.network.emitAll('testing');
-	
+
 	next();
 }, routes.index);
+
+app.get('/host', authenticate, function(request, response){
+	var room;
+	for(room = 0 ;; room++){
+		if(!rooms[room] || rooms[room].count === 0){
+			break;
+		}
+	}
 	
-//	AJAX
-app.get('/get/rooms', function(request, response){
-	response.json(rooms);
+	if(!rooms[room]){
+		rooms[room] = {
+			id:		room,
+			count:	0,
+			players:[]
+		};
+	}
+	
+	response.redirect('/room/' + room);
 });
 
-app.get('/maps/:path', function(request, response){
+app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
+	var id = request.sessionID,
+		room = request.params.room,
+		isPresent = rooms[room].players.indexOf(id) > -1;
+
+	if(rooms[room].count < 2 || isPresent){
+		if(!isPresent){
+			rooms[room].count += 1;
+			rooms[room].players.push(id);
+		}
+		
+		engine.players.get(id).socket.join('room-' + room);
+		
+		console.log('Player %s joined room #%d.', id, room);
+		
+		next();
+	}else{
+		response.redirect('/');
+	}
+}, routes.room);
+
+app.get('/game', routes.game);
+
+//	AJAX
+app.get('/get/rooms/:room?', authenticate, function(request, response){
+	var room = request.params.room;
+	
+	if(room){
+		response.json(rooms[room]);
+	}else{
+		response.json(rooms);
+	}
+});
+
+app.get('/maps/:path', authenticate, function(request, response){
 	try{
 		var map = require('./resources/maps/' + request.params.path + '.json');
 		
@@ -81,56 +138,9 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
 //	SERVE
-/*app.io.sockets.on('connection', function(socket){
-	var id = socket.id;
-	
-	console.log(id in players);
-	players[id] = {
-		id:		id,
-		socket:	socket
-	};
-	
-	console.log('Player #%d connected.', ++numPlayers);
-	
 	//	ROUTES
-	app.get('/host', function(request, response, next){
-		var room;
-		
-		for(room = 0 ;; room++){
-			if(!rooms[room] || rooms[room].players === 0){
-				break;
-			}
-		}
-		
-		if(!rooms[room]){
-			rooms[room] = {
-				id:			room,
-				players:	0
-			};
-		}
-		
-		response.redirect('/room/' + room);
-	});
-
-	app.get('/room/:room([0-9]+)', function(request, response, next){
-		var room = request.params.room;
-		
-		if(rooms[room].players < 2){
-			rooms[room].players += 1;
-			
-			socket.join('room-' + room);
-			
-			console.log('Player %s joined room #%d.', id, room);
-			
-			next();
-		}else{
-			response.redirect('/');
-		}
-	}, routes.room);
-	
-	app.get('/game', routes.game);
-	
+/*
 	socket.on('move', function(y){
 		socket.broadcast.emit('move', y);
 	});
-});*/
+*/
