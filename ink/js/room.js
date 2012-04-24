@@ -6,7 +6,6 @@ define(['engine/network'], function(network){
 	network
 	.connect()
 	.on('update', function(data){
-		console.log('updating', data);
 		var playerList = '';
 		
 		$('#count').text(data.count);

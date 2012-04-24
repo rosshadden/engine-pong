@@ -58,7 +58,7 @@ var authenticate = function(request, response, next){
 
 app.get('/', function(request, response, next){
 	if(engine.players.get(request.sessionID)){
-		engine.network.with(request.sessionID).leave(/^room\d+$/);
+		engine.network.with(request.sessionID).join('menu').leave(/^room\d+$/);
 	}
 	
 	next();
@@ -94,8 +94,9 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 			rooms[room].players.push(id);
 		}
 		
-		engine.network.with(id).join('room' + room);
+		engine.network.with(id).join('room' + room).leave('menu');
 		engine.network.in('room' + room).emit('update', rooms[room]);
+		engine.network.in('menu').emit('update', rooms);
 		
 		console.log('Player %s joined room #%d.', id, room);
 		
