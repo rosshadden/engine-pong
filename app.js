@@ -57,8 +57,14 @@ var authenticate = function(request, response, next){
 };
 
 app.get('/', function(request, response, next){
-	if(engine.players.get(request.sessionID)){
-		engine.network.with(request.sessionID).join('menu').leave(/^room\d+$/);
+	var id = request.sessionID;
+	
+	if(engine.players.get(id)){
+		engine.network.with(id).join('menu').leave(/^room\d+$/);
+	}else{
+		engine.events.emitter.once('created-' + id, function(){
+			engine.network.with(id).join('menu').leave(/^room\d+$/);
+		});
 	}
 	
 	next();
