@@ -56,11 +56,19 @@ var authenticate = function(request, response, next){
 //	}
 };
 
-//engine.network.on('rooms', function(socket){
-//	console.info('room:', app.io.sockets.clients()[0].manager.rooms);
-//});
+app.get('/', function(request, response, next){
+	if(engine.players.get(request.sessionID)){
+		engine.network.with(request.sessionID).leave('room0');
+	}
+	
+	next();
+}, routes.index);
 
-app.get('/', routes.index);
+app.get('/leave/:room', function(request, response){
+	engine.network.with(request.sessionID).leave(request.params.room);
+	
+	response.send(4);
+});
 
 app.get('/host', authenticate, function(request, response){
 	var room;
@@ -92,14 +100,8 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 			rooms[room].players.push(id);
 		}
 		
-		engine.players.get(id).socket.on('asdfasdf', function(asdf){
-			console.log('connected!');
-		});
-		
-		//	THIS. DOES. NOT. WORK. (and should!)
-		engine.players.get(id).socket.join('asdf');
-		
-		engine.network.in('asdf').emit('update', rooms[room]);
+		engine.network.with(id).join('room' + room);
+		engine.network.in('room' + room).emit('update', rooms[room]);
 		
 		console.log('Player %s joined room #%d.', id, room);
 		
