@@ -61,6 +61,7 @@ app.get('/', function(request, response, next){
 	
 	if(engine.players.get(id)){
 		engine.network.with(id).join('menu').leave(/^room\d+$/);
+		engine.events.emitter.emit('room leave', id);
 	}else{
 		engine.events.emitter.once('created ' + id, function(){
 			engine.network.with(id).join('menu').leave(/^room\d+$/);
@@ -143,10 +144,24 @@ server.listen(PORT);
 console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
-//	SERVE
-	//	ROUTES
-/*
-	socket.on('move', function(y){
-		socket.broadcast.emit('move', y);
+//	EVENTS
+	engine.events.emitter.on('room join', function(id, room){
+		console.log('%s joined room %s!', id, room);
 	});
-*/
+	
+	engine.events.emitter.on('room leave', function(id){
+		rooms.some(function(room, r){
+			var index = room.players.indexOf(id);
+			
+			if(index > -1){
+				room.players.splice(index, 1);
+				room.count -= 1;
+				
+				//	Right now this is only on the 'all' level,
+				//	and thus we cannot update the specific room left.
+				engine.network.in('menu').emit('update', rooms);
+				
+				return true;
+			}
+		});
+	});
