@@ -1,9 +1,12 @@
 define(['engine/network'], function(network){
-	var room = location.pathname.match(/\/([0-9]+)$/)[1];
+	window.network = network;
 
-	network.connect();
+	var room = location.pathname.match(/\/([0-9]+)$/)[1];
 	
-	$.get('/get/rooms/' + room, function(data){
+	network
+	.connect()
+	.on('update', function(data){
+		console.log('updating', data);
 		var playerList = '';
 		
 		$('#count').text(data.count);
@@ -13,9 +16,5 @@ define(['engine/network'], function(network){
 		});
 		
 		$('#list').html(playerList);
-	});
-
-	network.on('update', function(data){
-		console.log('update', data);
 	});
 });

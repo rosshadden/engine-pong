@@ -1,8 +1,10 @@
 define(['engine/network'], function(network){
+	window.network = network;
+	
 	network
 	.connect()
-	.on('testing', function(data){
-		console.log('testing', data);
+	.on('update', function(data){
+		console.log('updating', data);
 	});
 	
 	$.when(

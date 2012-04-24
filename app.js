@@ -48,23 +48,19 @@ app.configure('development', function(){
 ////////////////////////////////////////////////////////////////
 //	ROUTES
 var authenticate = function(request, response, next){
-	if(request.sessionID in engine.players.players){
-		next();
-	}else{
+//	if(request.sessionID in engine.players.players){
+//		next();
+//	}else{
 		//response.send('SUCKS!', 404);
 		next();
-	}
+//	}
 };
 
-engine.network.on('socketInfo', function(socket){
-	console.info('event', 'socketInfo', socket);
-});
+//engine.network.on('rooms', function(socket){
+//	console.info('room:', app.io.sockets.clients()[0].manager.rooms);
+//});
 
-app.get('/', function(request, response, next){
-	engine.network.emitAll('testing');
-
-	next();
-}, routes.index);
+app.get('/', routes.index);
 
 app.get('/host', authenticate, function(request, response){
 	var room;
@@ -96,7 +92,14 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 			rooms[room].players.push(id);
 		}
 		
-		engine.players.get(id).socket.join('room-' + room);
+		engine.players.get(id).socket.on('asdfasdf', function(asdf){
+			console.log('connected!');
+		});
+		
+		//	THIS. DOES. NOT. WORK. (and should!)
+		engine.players.get(id).socket.join('asdf');
+		
+		engine.network.in('asdf').emit('update', rooms[room]);
 		
 		console.log('Player %s joined room #%d.', id, room);
 		
