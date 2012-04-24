@@ -62,7 +62,7 @@ app.get('/', function(request, response, next){
 	if(engine.players.get(id)){
 		engine.network.with(id).join('menu').leave(/^room\d+$/);
 	}else{
-		engine.events.emitter.once('created-' + id, function(){
+		engine.events.emitter.once('created ' + id, function(){
 			engine.network.with(id).join('menu').leave(/^room\d+$/);
 		});
 	}
