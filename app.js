@@ -58,17 +58,11 @@ var authenticate = function(request, response, next){
 
 app.get('/', function(request, response, next){
 	if(engine.players.get(request.sessionID)){
-		engine.network.with(request.sessionID).leave('room0');
+		engine.network.with(request.sessionID).leave(/^room\d+$/);
 	}
 	
 	next();
 }, routes.index);
-
-app.get('/leave/:room', function(request, response){
-	engine.network.with(request.sessionID).leave(request.params.room);
-	
-	response.send(4);
-});
 
 app.get('/host', authenticate, function(request, response){
 	var room;
