@@ -157,6 +157,10 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 				room.players.splice(index, 1);
 				room.count -= 1;
 				
+				if(room.count <= 0){
+					rooms.splice(r, 1);
+				}
+				
 				//	Right now this is only on the 'all' level,
 				//	and thus we cannot update the specific room left.
 				engine.network.in('menu').emit('update', rooms);
