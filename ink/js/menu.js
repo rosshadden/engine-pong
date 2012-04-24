@@ -1,30 +1,23 @@
 define(['engine/network'], function(network){
 	window.network = network;
 	
-	var roomList,
-		
-		roomRequest = $.get('/templates/rooms.html').done(function(html){
-			roomList = Handlebars.compile(html);
-		}),
-		
-		renderRooms = function(data){
+	var	roomsHTML;
+	
+	var	roomsHTMLRequest = $.get('/templates/rooms.html').done(function(html){
+		roomsHTML = Handlebars.compile(html);
+	});
+	
+	var	renderRooms = function(rooms){
+		roomsHTMLRequest.done(function(){
 			$('#rooms').html(
-				roomList(data)
+				roomsHTML(rooms)
 			);
-		};
+		});
+	};
 	
 	network
 	.connect()
-	.on('update', function(rooms){
-		roomRequest.done(function(){
-			renderRooms(rooms)
-		});
-	});
+	.on('update', renderRooms);
 	
-	$.when(
-		$.get('/get/rooms'),
-		roomRequest
-	).done(function(data){
-		renderRooms(data[0])
-	});
+	$.get('/get/rooms').done(renderRooms);
 });
