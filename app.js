@@ -13,9 +13,7 @@ var	engine = require('./engine/engine.js')(app);
 
 ////////////////////////////////////////////////////////////////
 //	GAME STUFF
-	var players = {},
-		rooms = [],
-		numPlayers = 0;
+	var rooms = [];
 
 ////////////////////////////////////////////////////////////////
 //	CONFIG
@@ -49,22 +47,86 @@ app.configure('development', function(){
 
 ////////////////////////////////////////////////////////////////
 //	ROUTES
-engine.network.on('socketInfo', function(socket){
-	console.info('event', 'socketInfo', socket);
-});
+var authenticate = function(request, response, next){
+//	if(request.sessionID in engine.players.players){
+//		next();
+//	}else{
+		//response.send('SUCKS!', 404);
+		next();
+//	}
+};
 
 app.get('/', function(request, response, next){
-	engine.network.emitAll('testing');
+	var id = request.sessionID;
+	
+	if(engine.players.get(id)){
+		engine.network.with(id).join('menu').leave(/^room\d+$/);
+		engine.events.emitter.emit('room leave', id);
+	}else{
+		engine.events.emitter.once('created ' + id, function(){
+			engine.network.with(id).join('menu').leave(/^room\d+$/);
+		});
+	}
 	
 	next();
 }, routes.index);
+
+app.get('/host', authenticate, function(request, response){
+	var room;
+	for(room = 0 ;; room++){
+		if(!rooms[room] || rooms[room].count === 0){
+			break;
+		}
+	}
 	
-//	AJAX
-app.get('/get/rooms', function(request, response){
-	response.json(rooms);
+	if(!rooms[room]){
+		rooms[room] = {
+			id:		room,
+			count:	0,
+			players:[]
+		};
+	}
+	
+	response.redirect('/room/' + room);
 });
 
-app.get('/maps/:path', function(request, response){
+app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
+	var id = request.sessionID,
+		room = request.params.room,
+		isPresent = rooms[room].players.indexOf(id) > -1;
+
+	if(rooms[room].count < 2 || isPresent){
+		if(!isPresent){
+			rooms[room].count += 1;
+			rooms[room].players.push(id);
+		}
+		
+		engine.network.with(id).join('room' + room).leave('menu');
+		engine.network.in('room' + room).emit('update', rooms[room]);
+		engine.network.in('menu').emit('update', rooms);
+		
+		console.log('Player %s joined room #%d.', id, room);
+		
+		next();
+	}else{
+		response.redirect('/');
+	}
+}, routes.room);
+
+app.get('/game', routes.game);
+
+//	AJAX
+app.get('/get/rooms/:room?', authenticate, function(request, response){
+	var room = request.params.room;
+	
+	if(room){
+		response.json(rooms[room]);
+	}else{
+		response.json(rooms);
+	}
+});
+
+app.get('/maps/:path', authenticate, function(request, response){
 	try{
 		var map = require('./resources/maps/' + request.params.path + '.json');
 		
@@ -82,57 +144,28 @@ server.listen(PORT);
 console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
-//	SERVE
-/*app.io.sockets.on('connection', function(socket){
-	var id = socket.id;
+//	EVENTS
+	engine.events.emitter.on('room join', function(id, room){
+		console.log('%s joined room %s!', id, room);
+	});
 	
-	console.log(id in players);
-	players[id] = {
-		id:		id,
-		socket:	socket
-	};
-	
-	console.log('Player #%d connected.', ++numPlayers);
-	
-	//	ROUTES
-	app.get('/host', function(request, response, next){
-		var room;
-		
-		for(room = 0 ;; room++){
-			if(!rooms[room] || rooms[room].players === 0){
-				break;
+	engine.events.emitter.on('room leave', function(id){
+		rooms.some(function(room, r){
+			var index = room.players.indexOf(id);
+			
+			if(index > -1){
+				room.players.splice(index, 1);
+				room.count -= 1;
+				
+				if(room.count <= 0){
+					rooms.splice(r, 1);
+				}
+				
+				//	Right now this is only on the 'all' level,
+				//	and thus we cannot update the specific room left.
+				engine.network.in('menu').emit('update', rooms);
+				
+				return true;
 			}
-		}
-		
-		if(!rooms[room]){
-			rooms[room] = {
-				id:			room,
-				players:	0
-			};
-		}
-		
-		response.redirect('/room/' + room);
+		});
 	});
-
-	app.get('/room/:room([0-9]+)', function(request, response, next){
-		var room = request.params.room;
-		
-		if(rooms[room].players < 2){
-			rooms[room].players += 1;
-			
-			socket.join('room-' + room);
-			
-			console.log('Player %s joined room #%d.', id, room);
-			
-			next();
-		}else{
-			response.redirect('/');
-		}
-	}, routes.room);
-	
-	app.get('/game', routes.game);
-	
-	socket.on('move', function(y){
-		socket.broadcast.emit('move', y);
-	});
-});*/

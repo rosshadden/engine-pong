@@ -1,19 +1,23 @@
-define(function(){
-	var socket = window.io = io.connect();
+define(['engine/network'], function(network){
+	window.network = network;
 	
-	io.on('testing', function(data){
-		console.log('testing', data);
+	var	roomsHTML;
+	
+	var	roomsHTMLRequest = $.get('/templates/rooms.html').done(function(html){
+		roomsHTML = Handlebars.compile(html);
 	});
 	
-	$.when(
-		$.get('/get/rooms'),
-		$.get('/templates/rooms.html')
-	).done(function(data, html){
-		var rooms = data[0],
-			roomList = Handlebars.compile(html[0]);
-		
-		$('#rooms').html(
-			roomList(rooms)
-		);
-	});
+	var	renderRooms = function(rooms){
+		roomsHTMLRequest.done(function(){
+			$('#rooms').html(
+				roomsHTML(rooms)
+			);
+		});
+	};
+	
+	network
+	.connect()
+	.on('update', renderRooms);
+	
+	$.get('/get/rooms').done(renderRooms);
 });

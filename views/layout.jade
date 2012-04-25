@@ -10,6 +10,8 @@ html(lang = 'en')
     script(src='/socket.io/socket.io.js')
     block head
   body
+    header
+      a(href = '/') [fancy engine name]
     #main
       block content
     ol#log(reversed)
