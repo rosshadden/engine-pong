@@ -21,11 +21,15 @@ define(['engine/network'], function(network){
 	.connect()
 	.on('update', renderRoom)
 	.on('ready', function(id){
-		$('#room').find('li[data-id="' + id + '"]').append('READY!');
+		$('#room').find('li[data-id="' + id + '"]').addClass('ready');
 		
-		$('#start').prop('disabled', false);
+		if($('#room').find('li').length === $('#room').find('li.ready').length){
+			$('#start').prop('disabled', false);
+		}
 	})
 	.on('start', function(playerNum){
+		$('#start').prop('disabled', true);
+		
 		console.log('STARTING GAME! You will be Player #' + playerNum + '.');
 	});
 	
@@ -34,14 +38,13 @@ define(['engine/network'], function(network){
 	$('#start').prop('disabled', true)
 	.on('click', function(){
 		network.emit('start');
+		
+		$(this).prop('disabled', true);
 	});
 	
 	$('#ready').on('click', function(){
 		network.emit('ready');
 		
-		$('#start').prop('disabled', false);
-		$('#ready').prop('disabled', true);
-		
-		$('#room').find('li[data-id="' + 0 + '"]').append(' [READY!]');
+		$(this).prop('disabled', true);
 	});
 });

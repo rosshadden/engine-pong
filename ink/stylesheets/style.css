@@ -27,6 +27,15 @@ body #main {
   padding: 20px;
   border: 2px solid #000;
   background: #363;
+  text-align: center;
+}
+body #main ul {
+  padding: 0;
+  list-style: none;
+}
+body #main #room li.player.ready:after {
+  content: ' [Ready!]';
+  color: #00b7ff;
 }
 body #log {
   max-height: 48px;

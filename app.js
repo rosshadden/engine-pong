@@ -146,6 +146,10 @@ app.get('/get/rooms/:room?', authenticate, function(request, response){
 	}
 });
 
+app.get('/get/whoami', authenticate, function(request, response){
+	response.json(request.sessionID);
+});
+
 app.get('/maps/:path', authenticate, function(request, response){
 	try{
 		var map = require('./resources/maps/' + request.params.path + '.json');
@@ -171,6 +175,16 @@ engine.network.on('ready', function(){
 		player = engine.players.get(id);
 	
 	player.socket.get('room', function(err, room){
-		engine.network.with(player).broadcastTo('room' + room, 'ready', id);
+		engine.network.in('room' + room).emit('ready', id);
+	});
+});
+
+engine.network.on('start', function(){
+	var self = this,
+		id = self.handshake.sessionID,
+		player = engine.players.get(id);
+	
+	player.socket.get('room', function(err, room){
+		engine.network.in('room' + room).emit('start');
 	});
 });
