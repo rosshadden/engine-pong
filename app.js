@@ -57,15 +57,20 @@ var authenticate = function(request, response, next){
 };
 
 app.get('/', function(request, response, next){
-	var id = request.sessionID;
+	var id = request.sessionID,
+		player = engine.players.get(id);
 	
-	if(engine.players.get(id)){
-		engine.network.with(id).join('menu').leave(/^room\d+$/);
-		engine.events.emitter.emit('room leave', id);
+	var update = function(){
+		engine.network.with(id)
+		.join('menu')
+		.leave(/^room\d+$/)
+		.emit('update', rooms);
+	};
+	
+	if(player){
+		player.events.once('load', update);
 	}else{
-		engine.events.emitter.once('created ' + id, function(){
-			engine.network.with(id).join('menu').leave(/^room\d+$/);
-		});
+		engine.events.emitter.once('created ' + id, update);
 	}
 	
 	next();
@@ -92,20 +97,39 @@ app.get('/host', authenticate, function(request, response){
 
 app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 	var id = request.sessionID,
+		player = engine.players.get(id),
 		room = request.params.room,
-		isPresent = rooms[room].players.indexOf(id) > -1;
+		isPresent = rooms[room] && rooms[room].players.indexOf(id) > -1;
 
-	if(rooms[room].count < 2 || isPresent){
+	if(rooms[room] && rooms[room].count < 2 || isPresent){
 		if(!isPresent){
 			rooms[room].count += 1;
 			rooms[room].players.push(id);
 		}
 		
-		engine.network.with(id).join('room' + room).leave('menu');
-		engine.network.in('room' + room).emit('update', rooms[room]);
-		engine.network.in('menu').emit('update', rooms);
+		player.events.once('load', function(){
+			engine.network.with(id).join('room' + room).leave('menu');
+			engine.network.in('room' + room).emit('update', rooms[room]);
+			engine.network.in('menu').emit('update', rooms);
+			
+			player.events.once('unload', function(){
+				var index = rooms[room] && rooms[room].players.indexOf(id);
+				
+				if(index > -1){
+					rooms[room].players.splice(index, 1);
+					rooms[room].count -= 1;
+					
+					if(rooms[room].count <= 0){
+						rooms.splice(room, 1);
+					}
+					
+					engine.network.in('room' + room).emit('update', rooms[room]);
+					engine.network.in('menu').emit('update', rooms);
+				}
+			});
 		
-		console.log('Player %s joined room #%d.', id, room);
+			console.log('Player %s joined room #%d.', id, room);
+		});
 		
 		next();
 	}else{
@@ -145,10 +169,6 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
 //	EVENTS
-	engine.events.emitter.on('room join', function(id, room){
-		console.log('%s joined room %s!', id, room);
-	});
-	
 	engine.events.emitter.on('room leave', function(id){
 		rooms.some(function(room, r){
 			var index = room.players.indexOf(id);
