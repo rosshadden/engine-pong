@@ -19,7 +19,15 @@ define(['engine/network'], function(network){
 	
 	network
 	.connect()
-	.on('update', renderRoom);
+	.on('update', renderRoom)
+	.on('ready', function(id){
+		$('#room').find('li[data-id="' + id + '"]').append('READY!');
+		
+		$('#start').prop('disabled', false);
+	})
+	.on('start', function(playerNum){
+		console.log('STARTING GAME! You will be Player #' + playerNum + '.');
+	});
 	
 	$.get('/get/rooms/' + roomName).done(renderRoom);
 	
@@ -30,5 +38,10 @@ define(['engine/network'], function(network){
 	
 	$('#ready').on('click', function(){
 		network.emit('ready');
+		
+		$('#start').prop('disabled', false);
+		$('#ready').prop('disabled', true);
+		
+		$('#room').find('li[data-id="' + 0 + '"]').append(' [READY!]');
 	});
 });

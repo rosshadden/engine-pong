@@ -48,12 +48,7 @@ app.configure('development', function(){
 ////////////////////////////////////////////////////////////////
 //	ROUTES
 var authenticate = function(request, response, next){
-//	if(request.sessionID in engine.players.players){
-//		next();
-//	}else{
-		//response.send('SUCKS!', 404);
-		next();
-//	}
+	next();
 };
 
 app.get('/', function(request, response, next){
@@ -61,9 +56,13 @@ app.get('/', function(request, response, next){
 		player = engine.players.get(id);
 	
 	var update = function(){
+		player = engine.players.get(id);
+		
 		engine.network.with(id)
 		.join('menu')
 		.leave(/^room\d+$/);
+		
+		player.socket.set('room', 'menu');
 	};
 	
 	if(player){
@@ -111,6 +110,8 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 		engine.network.in('menu').emit('update', rooms);
 		
 		player.events.once('load', function(){
+			player.socket.set('room', room);
+			
 			player.events.once('unload', function(){
 				var index = rooms[room] && rooms[room].players.indexOf(id);
 				
@@ -164,3 +165,12 @@ console.log("Server started on port %d [%s]", PORT, app.settings.env);
 
 ////////////////////////////////////////////////////////////////
 //	EVENTS
+engine.network.on('ready', function(){
+	var self = this,
+		id = self.handshake.sessionID,
+		player = engine.players.get(id);
+	
+	player.socket.get('room', function(err, room){
+		engine.network.with(player).broadcastTo('room' + room, 'ready', id);
+	});
+});
