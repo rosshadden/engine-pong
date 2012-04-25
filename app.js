@@ -63,8 +63,7 @@ app.get('/', function(request, response, next){
 	var update = function(){
 		engine.network.with(id)
 		.join('menu')
-		.leave(/^room\d+$/)
-		.emit('update', rooms);
+		.leave(/^room\d+$/);
 	};
 	
 	if(player){
@@ -107,11 +106,11 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 			rooms[room].players.push(id);
 		}
 		
+		engine.network.with(id).join('room' + room).leave('menu');
+		engine.network.in('room' + room).emit('update', rooms[room]);
+		engine.network.in('menu').emit('update', rooms);
+		
 		player.events.once('load', function(){
-			engine.network.with(id).join('room' + room).leave('menu');
-			engine.network.in('room' + room).emit('update', rooms[room]);
-			engine.network.in('menu').emit('update', rooms);
-			
 			player.events.once('unload', function(){
 				var index = rooms[room] && rooms[room].players.indexOf(id);
 				

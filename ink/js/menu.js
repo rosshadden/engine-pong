@@ -19,5 +19,5 @@ define(['engine/network'], function(network){
 	.connect()
 	.on('update', renderRooms);
 	
-	//$.get('/get/rooms').done(renderRooms);
+	$.get('/get/rooms').done(renderRooms);
 });
