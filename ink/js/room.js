@@ -9,6 +9,7 @@ define(['engine/network'], function(network){
 	});
 		
 	var	renderRoom = function(room){
+		console.log('room', room);
 		roomHTMLRequest.done(function(){
 			$('#room').html(
 				roomHTML(room)
@@ -21,4 +22,13 @@ define(['engine/network'], function(network){
 	.on('update', renderRoom);
 	
 	$.get('/get/rooms/' + roomName).done(renderRoom);
+	
+	$('#start').prop('disabled', true)
+	.on('click', function(){
+		network.emit('start');
+	});
+	
+	$('#ready').on('click', function(){
+		network.emit('ready');
+	});
 });
