@@ -1,5 +1,9 @@
 {{#each this}}
 	<li>
-		<a href="room/{{id}}">room #{{id}} ({{count}}/2)</a>
+		{{#isOpen count}}
+			<a href="room/{{id}}">room #{{id}} ({{count}}/2)</a>
+		{{else}}
+			room #{{id}} ({{count}}/2)
+		{{/isOpen}}
 	</li>
 {{/each}}

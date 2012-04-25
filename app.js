@@ -118,10 +118,6 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 					rooms[room].players.splice(index, 1);
 					rooms[room].count -= 1;
 					
-					if(rooms[room].count <= 0){
-						rooms.splice(room, 1);
-					}
-					
 					engine.network.in('room' + room).emit('update', rooms[room]);
 					engine.network.in('menu').emit('update', rooms);
 				}
