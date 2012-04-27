@@ -1,9 +1,9 @@
 define(['./entity', 'engine/draw', 'engine/collision', 'engine/audio', 'engine/resources', 'engine/events'], function(Entity, draw, collision, audio, resources, events){
 	var Ball = Entity.extend({
 		init:	function(properties){
-			this._super(properties);
-			
 			var self = this;
+			
+			this._super(properties);
 			
 			self.isAnimated = true;
 			self.isAnimating = true;

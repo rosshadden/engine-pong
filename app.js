@@ -9,7 +9,7 @@ var	PORT = +(process.argv[2] || process.env.PORT || 3000),
 	app.session = new express.session.MemoryStore;
 	app.io = require('socket.io').listen(server);
 	
-var	engine = require('./engine/engine.js')(app);
+var	engine = require('./engine')(app);
 
 ////////////////////////////////////////////////////////////////
 //	GAME STUFF
@@ -135,6 +135,7 @@ app.get('/room/:room([0-9]+)', authenticate, function(request, response, next){
 
 app.get('/game', routes.game);
 
+////////////////////////////////////////////////////////////////
 //	AJAX
 app.get('/get/rooms/:room?', authenticate, function(request, response){
 	var room = request.params.room;
