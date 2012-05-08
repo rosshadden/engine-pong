@@ -1,3 +1,6 @@
+//	I'd much rather not have the dev have to do all this,
+//	but I can't think of another way to include require.js,
+//	and it is very useful inside the engine.
 require.config({
 	paths:	{
 		'engine':	'/engine',
@@ -5,25 +8,27 @@ require.config({
 	}
 });
 
-require(['jquery'], function($){
-	var route = (location.pathname.match(/\/\w*/) || ['/'])[0];
+require([
+	'engine/index',
+	'./scenes/index',
+	'./displays/index',
+	'./controls/index'
+], function(engine, scenes, displays, controls){
+	window.engine = engine;
 	
-	switch(route){
-		case '/':
-			require(['menu']);
-			break;
-			
-		case '/room':
-			require(['room']);
-			break;
-			
-		case '/game':
-			require(['game'], function(game){
-				//TEMP:	For debugging and experimentation.
-				window.game = game;
-				
-				game.start();
-			});
-			break;
-	}
+	engine.canvas = '#screen';
+	
+	scenes(engine);
+	displays(engine);
+	controls(engine);
+	
+	engine.ready(function(){
+		engine.sys.init(engine.canvas)
+		.attr({
+			clearColor:	'#336'
+		})
+		.start();
+		
+		engine.scene('home').enter();
+	});
 });

@@ -51,7 +51,7 @@ var authenticate = function(request, response, next){
 	next();
 };
 
-app.get('/', function(request, response, next){
+app.get('/', routes.game, function(request, response, next){
 	var id = request.sessionID,
 		player = engine.players.get(id);
 	
