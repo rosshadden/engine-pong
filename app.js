@@ -13,7 +13,7 @@ var	engine = require('./engine')(app);
 
 ////////////////////////////////////////////////////////////////
 //	GAME STUFF
-	var rooms = [];
+var rooms = [];
 
 ////////////////////////////////////////////////////////////////
 //	CONFIG
@@ -72,7 +72,7 @@ app.get('/', routes.game, function(request, response, next){
 	}
 	
 	next();
-}, routes.index);
+}, routes.game, routes.index);
 
 app.get('/host', authenticate, function(request, response){
 	var room;
@@ -188,4 +188,11 @@ engine.network.on('start', function(){
 	player.socket.get('room', function(err, room){
 		engine.network.in('room' + room).emit('start');
 	});
+});
+
+engine.network.on('move', function(position){
+	var self = this,
+		id = self.handshake.sessionID;
+	
+	engine.network.with(id).broadcast('move', position);
 });

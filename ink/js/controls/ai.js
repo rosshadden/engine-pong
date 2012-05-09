@@ -1,7 +1,7 @@
 define(function(){
 	return function(engine){
 		engine.c('ai')
-		.requires('paddle update point')
+		.requires('paddle update point net')
 		.defines({
 			update:	function(){
 				var ball = engine('ball')[0];
@@ -20,7 +20,13 @@ define(function(){
 			}
 		})
 		.init(function(){
-			this.on('update', this.update);
+			var self = this;
+			
+			//self.on('update', self.update);
+			
+			self.bind('move', function(position){
+				self.posY = position;
+			});
 		})
 		.dispose(function(){
 			this.off();
